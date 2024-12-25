@@ -1,0 +1,22 @@
+{
+  "name": "bot2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch src/bot.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.3.12",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "gitignore": "^0.7.0",
+    "grammy": "^1.33.0",
+    "mongoose": "^8.9.2"
+  }
+}
