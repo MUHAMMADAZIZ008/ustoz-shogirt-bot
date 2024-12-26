@@ -1,6 +1,6 @@
 import { Bot } from "grammy";
 import connectDB from "./database/db.js";
-import { askName, help, partner, partnerNameSave, saveTechnology, start } from "./commands/index.js";
+import { askName, help, partner, partnerNameSave, saveArea, saveJob, savePhone, savePrivce, saveTechnology, start } from "./commands/index.js";
 
 
 export const bot = new Bot('7699328433:AAFx_QfMSzoGIzv-PzmD_6dW6OX8tmBAOFA');
@@ -25,11 +25,33 @@ bot.on("message:text", async (ctx) => {
     }
     if (currentState && currentState[0] === 'Sherik kerak' && currentState[1] === 'step1') {
         await partnerNameSave(ctx);
-        userStates.set(chatId, ['Sherik kerak', 'step2']); 
+        userStates.set(chatId, ['Sherik kerak', 'step2']);
     }
     if (currentState && currentState[0] === 'Sherik kerak' && currentState[1] === 'step2') {
         await saveTechnology(ctx);
-        userStates.set(chatId, ['Sherik kerak', 'step2']); 
+        userStates.set(chatId, ['Sherik kerak', 'step3']);
+    }
+
+    if (currentState && currentState[0] === 'Sherik kerak' && currentState[1] === 'step3') {
+        await savePhone(ctx);
+        userStates.set(chatId, ['Sherik kerak', 'step4']);
+    }
+    if (currentState && currentState[0] === 'Sherik kerak' && currentState[1] === 'step4') {
+        await saveArea(ctx);
+        userStates.set(chatId, ['Sherik kerak', 'step5']);
+    }
+    if (currentState && currentState[0] === 'Sherik kerak' && currentState[1] === 'step5') {
+        await savePrivce(ctx);
+        userStates.set(chatId, ['Sherik kerak', 'step6']);
+    }
+
+    if (currentState && currentState[0] === 'Sherik kerak' && currentState[1] === 'step6') {
+        await saveJob(ctx);
+        userStates.set(chatId, ['Sherik kerak', 'step7']);
+    }
+    if (currentState && currentState[0] === 'Sherik kerak' && currentState[1] === 'step7') {
+        await saveDate(ctx);
+        userStates.set(chatId, ['Sherik kerak', 'step8']);
     }
 });
 
