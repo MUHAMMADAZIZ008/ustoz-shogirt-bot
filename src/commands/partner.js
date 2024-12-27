@@ -1,3 +1,4 @@
+import { User } from "../schema/user.schema.js";
 import { askConfirm } from "./confirm.js";
 
 
@@ -22,6 +23,10 @@ Ism, familiyangizni kiriting?
 export const partnerNameSave = async (ctx) => {
     const userName = ctx.message.text
     process.partner.partner = userName
+    if(!process.partner.userId){
+        const currntUser = await User.findOne({telegramId: ctx.update.message.from.id})
+        process.partner.userId = currntUser._id
+    }
     return ctx.reply(`
 📚 Texnologiya:
 
