@@ -1,4 +1,4 @@
-import { Partner, User } from "../schema/index.js";
+import { askConfirm } from "./confirm.js";
 
 
 
@@ -20,16 +20,8 @@ Ism, familiyangizni kiriting?
 }
 
 export const partnerNameSave = async (ctx) => {
-
-    const currnetUserId = ctx.update.message.from.id
-    const currnetUser = await User.findOne({ telegramId: currnetUserId })
-    const newParnerIdAndName = {
-        userId: currnetUser._id,
-        partner: ctx.message.text
-    }
-    const newPartner = new Partner(newParnerIdAndName)
-    await newPartner.save()
-
+    const userName = ctx.message.text
+    process.partner.partner = userName
     return ctx.reply(`
 📚 Texnologiya:
 
@@ -43,24 +35,9 @@ Java, C++, C#
 export const saveTechnology = async (ctx) => {
     try {
         const technologyToArray = ctx.message.text.split(',').map(tech => tech.trim());
-
-        const currnetUserId = ctx.update.message.from.id;
-        const currnetUser = await User.findOne({ telegramId: currnetUserId })
-        const currnetPartner = (await Partner.find({ userId: currnetUser._id }).exec()).pop();
-
-        if (!currnetPartner) {
-            return ctx.reply("Foydalanuvchi topilmadi. Iltimos, qayta urinib ko'ring.");
-        }
-
-        const updateResult = await Partner.updateOne(
-            { _id: currnetPartner._id },
-            { $set: { technology: technologyToArray } }
-        );
-
-        if (updateResult.nModified === 0) {
-            return ctx.reply("Texnologiyalarni saqlashda xatolik yuz berdi.");
-        }
-
+        process.partner.technology = technologyToArray
+        
+        
         return ctx.reply(`
 📞 Aloqa: 
 
@@ -75,26 +52,8 @@ Masalan, +998 90 123 45 67
 
 export const savePhone = async (ctx) => {
     try {
-        const newPhoneText = ctx.message.text.trim()
-        const currnetUserId = ctx.update.message.from.id;
-        const currnetUser = await User.findOne({ telegramId: currnetUserId })
-        const currnetPartner = (await Partner.find({ userId: currnetUser._id }).exec()).pop();
-
-        if (!currnetPartner) {
-            return ctx.reply("Foydalanuvchi topilmadi. Iltimos, qayta urinib ko'ring.");
-        }
-
-        const updateResult = await Partner.updateOne(
-            { _id: currnetPartner._id },
-            { $set: { 
-                telegram: currnetUser.username,
-                contact: newPhoneText
-            } }
-        );
-
-        if (updateResult.nModified === 0) {
-            return ctx.reply("Texnologiyalarni saqlashda xatolik yuz berdi.");
-        }
+        const userPhone = ctx.message.text
+        process.partner.contact = userPhone
         return ctx.reply(`
 🌐 Hudud: 
 
@@ -113,25 +72,8 @@ Viloyat nomi, Toshkent shahar yoki Respublikani kiriting.
 
 export const saveArea = async (ctx) =>{
     try {
-        const newAreaText = ctx.message.text.trim()
-        const currnetUserId = ctx.update.message.from.id;
-        const currnetUser = await User.findOne({ telegramId: currnetUserId })
-        const currnetPartner = (await Partner.find({ userId: currnetUser._id }).exec()).pop();
-
-        if (!currnetPartner) {
-            return ctx.reply("Foydalanuvchi topilmadi. Iltimos, qayta urinib ko'ring.");
-        }
-
-        const updateResult = await Partner.updateOne(
-            { _id: currnetPartner._id },
-            { $set: { 
-                area: newAreaText
-            } }
-        );
-
-        if (updateResult.nModified === 0) {
-            return ctx.reply("Hududni saqlashda xatolik yuz berdi.");
-        }
+        const userArea = ctx.message.text
+        process.partner.area = userArea
         return ctx.reply(`
 💰 Narxi:
 
@@ -145,27 +87,11 @@ Kerak bo'lsa, Summani kiriting?
 }
 
 
-export const savePrivce = async (ctx) =>{
+export const savePrice = async (ctx) =>{
     try {
-        const newPriceText = ctx.message.text.trim()
-        const currnetUserId = ctx.update.message.from.id;
-        const currnetUser = await User.findOne({ telegramId: currnetUserId })
-        const currnetPartner = (await Partner.find({ userId: currnetUser._id }).exec()).pop();
 
-        if (!currnetPartner) {
-            return ctx.reply("Foydalanuvchi topilmadi. Iltimos, qayta urinib ko'ring.");
-        }
-
-        const updateResult = await Partner.updateOne(
-            { _id: currnetPartner._id },
-            { $set: { 
-                price: newPriceText
-            } }
-        );
-
-        if (updateResult.nModified === 0) {
-            return ctx.reply("Narx saqlashda xatolik yuz berdi.");
-        }
+        const userPrice = ctx.message.text
+        process.partner.price = userPrice
         return ctx.reply(`
 👨🏻‍💻 Kasbi: 
 
@@ -182,25 +108,8 @@ Masalan, Talaba
 
 export const saveJob = async (ctx) =>{
     try {
-        const newJobText = ctx.message.text.trim()
-        const currnetUserId = ctx.update.message.from.id;
-        const currnetUser = await User.findOne({ telegramId: currnetUserId })
-        const currnetPartner = (await Partner.find({ userId: currnetUser._id }).exec()).pop();
-
-        if (!currnetPartner) {
-            return ctx.reply("Foydalanuvchi topilmadi. Iltimos, qayta urinib ko'ring.");
-        }
-
-        const updateResult = await Partner.updateOne(
-            { _id: currnetPartner._id },
-            { $set: { 
-                job: newJobText
-            } }
-        );
-
-        if (updateResult.nModified === 0) {
-            return ctx.reply("Kasb saqlashda xatolik yuz berdi.");
-        }
+        const userJob = ctx.message.text
+        process.partner.job = userJob
         return ctx.reply(`
 🕰 Murojaat qilish vaqti: 
 
@@ -216,30 +125,24 @@ Masalan, 9:00 - 18:00
 
 export const saveDate = async (ctx) =>{
     try {
-        const newDateText = ctx.message.text.trim()
-        const currnetUserId = ctx.update.message.from.id;
-        const currnetUser = await User.findOne({ telegramId: currnetUserId })
-        const currnetPartner = (await Partner.find({ userId: currnetUser._id }).exec()).pop();
-
-        if (!currnetPartner) {
-            return ctx.reply("Foydalanuvchi topilmadi. Iltimos, qayta urinib ko'ring.");
-        }
-
-        const updateResult = await Partner.updateOne(
-            { _id: currnetPartner._id },
-            { $set: { 
-                time_to_contact: newDateText
-            } }
-        );
-
-        if (updateResult.nModified === 0) {
-            return ctx.reply("Kasb saqlashda xatolik yuz berdi.");
-        }
+        const userDate = ctx.message.text
+        process.partner.time_to_contact = userDate
         return ctx.reply(`
 🔎 Maqsad: 
 
 Maqsadingizni qisqacha yozib bering.
         `)
+    } catch (error) {
+        console.error("Xatolik yuz berdi:", error);
+        return ctx.reply("Kasb saqlashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
+    }
+}
+
+export const savePurpose = async (ctx) =>{
+    try {
+        const userPurpose = ctx.message.text
+        process.partner.purpose = userPurpose
+        return askConfirm(ctx, process.partner)
     } catch (error) {
         console.error("Xatolik yuz berdi:", error);
         return ctx.reply("Kasb saqlashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");

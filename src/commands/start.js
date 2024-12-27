@@ -5,6 +5,7 @@ import { User } from '../schema/index.js'
 
 export const start = async (ctx) => {
     try {
+        process.userStates.clear()
         const user = ctx.update.message.from
         const telegramId = user.id.toString();
         const currentUser = await User.findOne({ telegramId })
@@ -17,6 +18,14 @@ export const start = async (ctx) => {
                 language: user.language_code
             })
             await newUser.save()
+            process.partner = {
+                userId: newUser._id,
+                telegram: newUser.username
+            }
+        }
+        process.partner = {
+            userId: currentUser._id,
+            telegram: currentUser.username
         }
         ctx.reply(`
 Assalom alaykum ${user.first_name}
@@ -26,9 +35,6 @@ UstozShogird kanalining rasmiy botiga xush kelibsiz!
 `, {
             reply_markup: homeKeyboards
         })
-        // ctx.reply('Quyidagi variantlardan tanlang:',{
-        //     reply_markup: homeKeyboards
-        // })
     } catch (error) {
         console.error(error.message);
     }
