@@ -1,29 +1,34 @@
 import { Schema, model } from 'mongoose';
 
 const UserSchema = new Schema({
-  telegramId: { 
-    type: String, 
-    required: true, 
+  chatId: {
+    type: Number,
+    required: true,
     unique: true
   },
-  username: { 
-    type: String, 
-    default: null 
+  telegramId: {
+    type: String,
+    required: true,
+    unique: true
   },
-  firstName: { 
-    type: String, 
-    required: true 
+  username: {
+    type: String,
+    default: null
   },
-  lastName: { 
-    type: String, 
-    default: null 
+  firstName: {
+    type: String,
+    required: true
   },
-  language: { 
-    type: String, 
+  lastName: {
+    type: String,
+    default: null
+  },
+  language: {
+    type: String,
     default: 'uz'
   },
-  joinedAt: { 
-    type: Date, 
+  joinedAt: {
+    type: Date,
     default: Date.now
   }
 });

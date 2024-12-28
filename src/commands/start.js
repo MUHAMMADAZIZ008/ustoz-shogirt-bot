@@ -5,12 +5,13 @@ import { User } from '../schema/index.js'
 
 export const start = async (ctx) => {
     try {
-        process.userStates.clear()
         const user = ctx.update.message.from
         const telegramId = user.id.toString();
         const currentUser = await User.findOne({ telegramId })
+        
         if (!currentUser) {
             const newUser = new User({
+                chatId: ctx.chat.id,
                 telegramId,
                 username: user.username,
                 firstName: user.first_name,
@@ -18,14 +19,12 @@ export const start = async (ctx) => {
                 language: user.language_code
             })
             await newUser.save()
-            process.partner = {
-                userId: newUser._id,
-                telegram: newUser.username
+            if (newUser.chatId === ctx.chat.id) {
+                await process.userStates.clear()
             }
         }
-        process.partner = {
-            userId: currentUser._id,
-            telegram: currentUser.username
+        if (currentUser.chatId === ctx.chat.id) {
+            await process.userStates.clear()
         }
         ctx.reply(`
 Assalom alaykum ${user.first_name}

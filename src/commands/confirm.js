@@ -4,10 +4,13 @@ import { Partner, User } from "../schema/index.js";
 
 
 
-export const askConfirm = async (ctx, newPartner) => {
+export const askConfirm = async (ctx, partnerId) => {
     try {
+        const newPartner = await Partner.findOne({ _id: partnerId })
+
 
         let technologyToString;
+
         const searchTechnology = newPartner.technology[0]
         if (newPartner.technology.length > 0) {
             technologyToString = newPartner.technology.reduce(
@@ -21,7 +24,7 @@ Sherik kerak:
 
 🏅 Sherik: ${newPartner.partner}
 📚 Texnologiya: ${technologyToString} 
-🇺🇿 Telegram: ${newPartner.telegram}
+🇺🇿 Telegram: @${newPartner.telegram}
 📞 Aloqa: ${newPartner.contact}
 🌐 Hudud: ${newPartner.area}
 💰 Narxi: ${newPartner.price}
@@ -42,34 +45,37 @@ Sherik kerak:
 }
 export const answerYes = async (ctx) => {
     try {
-        const newPartner = new Partner(process.partner)
-        await newPartner.save()
+        const telegramId = ctx.update.message.from.id
+        const currentUser = await User.findOne({ telegramId })
+        if (currentUser.chatId === ctx.chat.id) {
+            await process.userStates.clear()
+        }
+        const userPartners = await Partner.find({ userId: currentUser._id })
+        const currentPartner = userPartners.pop()
 
-        process.userStates.clear()
-        process.partner = {}
         let technologyToString
-        if (newPartner.technology.length > 0) {
-            technologyToString = newPartner.technology.reduce(
+        if (currentPartner.technology.length > 0) {
+            technologyToString = currentPartner.technology.reduce(
                 (acc, curratnValue) => acc += ', ' + curratnValue
             )
         } else {
-            technologyToString = newPartner.technology[0]
+            technologyToString = currentPartner.technology[0]
         }
-        const searchTechnology = newPartner.technology[0]
+        const searchTechnology = currentPartner.technology[0]
         const sendMessage = `
 Sherik kerak:
 
-🏅 Sherik: ${newPartner.partner}
+🏅 Sherik: ${currentPartner.partner}
 📚 Texnologiya: ${technologyToString} 
-🇺🇿 Telegram: ${newPartner.telegram}
-📞 Aloqa: ${newPartner.contact}
-🌐 Hudud: ${newPartner.area}
-💰 Narxi: ${newPartner.price}
-👨🏻‍💻 Kasbi: ${newPartner.job}
-🕰 Murojaat qilish vaqti: ${newPartner.time_to_contact} 
-🔎 Maqsad: ${newPartner.purpose}
+🇺🇿 Telegram: @${currentPartner.telegram}
+📞 Aloqa: ${currentPartner.contact}
+🌐 Hudud: ${currentPartner.area}
+💰 Narxi: ${currentPartner.price}
+👨🏻‍💻 Kasbi: ${currentPartner.job}
+🕰 Murojaat qilish vaqti: ${currentPartner.time_to_contact} 
+🔎 Maqsad: ${currentPartner.purpose}
 
-#sherik #${searchTechnology} #${newPartner.area}
+#sherik #${searchTechnology} #${currentPartner.area}
 `
 
         const result = [

@@ -1,10 +1,16 @@
+import { Partner } from "../schema/partner.schema.js";
 import { User } from "../schema/user.schema.js";
 import { askConfirm } from "./confirm.js";
 
 
 
 export const partner = async (ctx) => {
-
+    // const telegramId = ctx.update.message.from.id
+    // const currentUser = await User.findOne({ telegramId })
+    
+    // if (currentUser.chatId === ctx.chat.id) {
+    //     await process.userStates.clear()
+    // }
     return ctx.reply(`
 Sherik topish uchun ariza berish
 
@@ -22,11 +28,15 @@ Ism, familiyangizni kiriting?
 
 export const partnerNameSave = async (ctx) => {
     const userName = ctx.message.text
-    process.partner.partner = userName
-    if(!process.partner.userId){
-        const currntUser = await User.findOne({telegramId: ctx.update.message.from.id})
-        process.partner.userId = currntUser._id
-    }
+    const telegramId = ctx.update.message.from.id
+    const currentUser = await User.findOne({ telegramId })
+
+    const newPartner = new Partner({
+        userId: currentUser._id,
+        partner: userName
+    })
+    await newPartner.save()
+
     return ctx.reply(`
 📚 Texnologiya:
 
@@ -40,9 +50,19 @@ Java, C++, C#
 export const saveTechnology = async (ctx) => {
     try {
         const technologyToArray = ctx.message.text.split(',').map(tech => tech.trim());
-        process.partner.technology = technologyToArray
-        
-        
+        const telegramId = ctx.update.message.from.id
+        const currentUser = await User.findOne({ telegramId })
+
+        const userPartners = await Partner.find({ userId: currentUser._id })
+
+        const currentPartner = userPartners.pop()
+
+        const filter = { _id: currentPartner._id }
+        const update = {
+            $set: { technology: technologyToArray, telegram: currentUser.username }
+        }
+        await Partner.updateOne(filter, update)
+
         return ctx.reply(`
 📞 Aloqa: 
 
@@ -58,7 +78,16 @@ Masalan, +998 90 123 45 67
 export const savePhone = async (ctx) => {
     try {
         const userPhone = ctx.message.text
-        process.partner.contact = userPhone
+        const telegramId = ctx.update.message.from.id
+        const currentUser = await User.findOne({ telegramId })
+
+        const userPartners = await Partner.find({ userId: currentUser._id })
+        const currentPartner = userPartners.pop()
+        const filter = { _id: currentPartner._id }
+        const update = {
+            $set: { contact: userPhone }
+        }
+        await Partner.updateOne(filter, update)
         return ctx.reply(`
 🌐 Hudud: 
 
@@ -75,10 +104,21 @@ Viloyat nomi, Toshkent shahar yoki Respublikani kiriting.
 
 
 
-export const saveArea = async (ctx) =>{
+export const saveArea = async (ctx) => {
     try {
         const userArea = ctx.message.text
-        process.partner.area = userArea
+
+        const telegramId = ctx.update.message.from.id
+        const currentUser = await User.findOne({ telegramId })
+
+        const userPartners = await Partner.find({ userId: currentUser._id })
+        const currentPartner = userPartners.pop()
+        const filter = { _id: currentPartner._id }
+        const update = {
+            $set: { area: userArea }
+        }
+        await Partner.updateOne(filter, update)
+
         return ctx.reply(`
 💰 Narxi:
 
@@ -92,11 +132,23 @@ Kerak bo'lsa, Summani kiriting?
 }
 
 
-export const savePrice = async (ctx) =>{
+export const savePrice = async (ctx) => {
     try {
 
         const userPrice = ctx.message.text
-        process.partner.price = userPrice
+
+        const telegramId = ctx.update.message.from.id
+        const currentUser = await User.findOne({ telegramId })
+
+        const userPartners = await Partner.find({ userId: currentUser._id })
+        const currentPartner = userPartners.pop()
+        const filter = { _id: currentPartner._id }
+        const update = {
+            $set: { price: userPrice }
+        }
+        await Partner.updateOne(filter, update)
+
+
         return ctx.reply(`
 👨🏻‍💻 Kasbi: 
 
@@ -111,10 +163,21 @@ Masalan, Talaba
 
 
 
-export const saveJob = async (ctx) =>{
+export const saveJob = async (ctx) => {
     try {
         const userJob = ctx.message.text
-        process.partner.job = userJob
+
+        const telegramId = ctx.update.message.from.id
+        const currentUser = await User.findOne({ telegramId })
+
+        const userPartners = await Partner.find({ userId: currentUser._id })
+        const currentPartner = userPartners.pop()
+        const filter = { _id: currentPartner._id }
+        const update = {
+            $set: { job: userJob }
+        }
+        await Partner.updateOne(filter, update)
+
         return ctx.reply(`
 🕰 Murojaat qilish vaqti: 
 
@@ -128,10 +191,19 @@ Masalan, 9:00 - 18:00
 }
 
 
-export const saveDate = async (ctx) =>{
+export const saveDate = async (ctx) => {
     try {
         const userDate = ctx.message.text
-        process.partner.time_to_contact = userDate
+        const telegramId = ctx.update.message.from.id
+        const currentUser = await User.findOne({ telegramId })
+
+        const userPartners = await Partner.find({ userId: currentUser._id })
+        const currentPartner = userPartners.pop()
+        const filter = { _id: currentPartner._id }
+        const update = {
+            $set: { time_to_contact: userDate }
+        }
+        await Partner.updateOne(filter, update)
         return ctx.reply(`
 🔎 Maqsad: 
 
@@ -143,11 +215,20 @@ Maqsadingizni qisqacha yozib bering.
     }
 }
 
-export const savePurpose = async (ctx) =>{
+export const savePurpose = async (ctx) => {
     try {
         const userPurpose = ctx.message.text
-        process.partner.purpose = userPurpose
-        return askConfirm(ctx, process.partner)
+        const telegramId = ctx.update.message.from.id
+        const currentUser = await User.findOne({ telegramId })
+
+        const userPartners = await Partner.find({ userId: currentUser._id })
+        const currentPartner = userPartners.pop()
+        const filter = { _id: currentPartner._id }
+        const update = {
+            $set: { purpose: userPurpose }
+        }
+        await Partner.updateOne(filter, update)
+        return askConfirm(ctx, currentPartner._id)
     } catch (error) {
         console.error("Xatolik yuz berdi:", error);
         return ctx.reply("Kasb saqlashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
